@@ -1,4 +1,4 @@
-Qwen2.5-72B-Instruct-bf16 settings:
+OpenMOSE/Qwen3.5-REAP-212B-A17B settings:
 
 
 A) Inference parameters:
@@ -9,9 +9,8 @@ A) Inference parameters:
   Top-K: 50
   Repeat Penalty: 1.01 (Higher penalties destroy the rhythm of creative English prose).
   Presence Penalty: 0.05
-  Max Tokens: 8192 (This model's maximum response token count, sufficient for long narrative passages).
+  Max Tokens: 131072 (This model's maximum response token count, sufficient for long narrative passages).
   num_ctx: 131072 (This model's maximum context window size).
-  num_predict: 8192 (custom parameter)
 
 
 B) System Prompt Template:
@@ -32,15 +31,17 @@ Execution Rules:
 7. Output ONLY the final, polished English text with no extra conversational filler, analysis, or conversational responses.
 
 Please provide only:
-1. The final, polished translated English Text.
+1. The final, polished English Text.
 
 
 C) USER PROMPT TEMPLATE Use when prompting the model, provide context to help it make better stylistic choices:
 
-Translate the following Traditional Chinese novel into English. 
-
-Context: [Optional: e.g., This is a fictional contempory drama, suspenseful thriller, the narrator is an old detective, early 1900s Shanghai]
-Tone/Style: [Optional: e.g., Dark, poetic, fast-paced]
-
-Original Text:
+You are the American playwright Arthur Miller. Your task is to translate and dramatize the following contemporary Traditional Chinese novel chapter into English.
+Context: The story is set in modern-day London.
+Style Guidelines: Use a dramatic, gritty, and deeply emotional tone, similar to Death of a Salesman or All My Sons. Prioritise diaogue that sounds natural, fraught with subtext, and heavy with moral conflict.
+Translate the core emotional and thematic weight of the Traditional Chinese text rather than doing a literal translation. 
+Focus on the tension between the individual's desires and societal or familial expectations. 
+Do this for the entirety of the text provided and return the full English script.
+Adapt the meaning, pacing and emotional resonance of any third-person narrative to the audio / visual medium of film including detailed instructions for the film maker.
+Source Text: 
 [Insert your Traditional Chinese text here]
