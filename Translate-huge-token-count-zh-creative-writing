@@ -1,6 +1,11 @@
-Performing local (Mac M3 Ultra 256GB memory) translation of huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing with contextual understanding of the entire text.
+Performs local (Mac M3 Ultra 256GB memory) translation of a huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing text utilizing a contextual understanding of the entire text.
 
-Example model: Qwen/Qwen3.5-397B-A17B, footprint is 807GB --> 1.Prune experts/weights for task, target 400/420GB BFP16 --> 2.Quantize for mlx 8-bit, target 200/220GB MXFP8  --> pj-s/Qwen3.5-pjspruned-397B-A17B-mxfp8 
+Example model:
+            Qwen/Qwen3.5-397B-A17B, BF16 footprint is 807GB
+            Modifications:
+                        --> 1.Prune experts/weights for task, target 400/420GB footprint @BF16 
+                        --> 2.Quantize for mlx 8-bit, target 200/220GB footprint @MXFP8
+                        --> Modified model: pj-s/Qwen3.5-pjspruned-397B-A17B-mxfp8 
 Example parameters: 
             temperature=0.8,              # Dynamic phrasing and creative prose rhythm
             top_p=0.9,                    # Nucleus sampling boundary
@@ -8,16 +13,19 @@ Example parameters:
             top_k=50,                     # Caps maximum token pool considerations
             repetition_penalty=1.01,      # Gentle protection against loops without killing style
             max_kv_size=32768             # Forces MLX to forget the oldest generated tokens in its active RAM layer while keeping its core document understanding intact via the prompt_cache_file
-Example chunking parametes:
+Example chunking parameters:
             CHUNK_CHAR_SIZE = 3500        # Literary Calibration: Slightly smaller source blocks give the model more computational headroom to explore creative prose phrasing.
             MAX_OUTPUT_TOKENS = 6144      # Token Expansion - Translating from Chinese to English naturally results in a higher token count for the output than the input (often a 1.3x multiplier)
 
-Notes:
-1.) Implements a Synchronized Sliding Source-Target Window. 
-- Instead of caching the entire 1M token input at once, this will slice the input text into perfectly trackable translation blocks, passing a sliding window of the last translated block alongside the new source block to maintain stylistic consistency.
-- Thereby guarantees perfect 1:1 context tracking throughout the translation process.
-2.) Traditional Chinese characters carry high informational density (averaging 1.5 to 2 tokens per character in Qwen's tokenizer).
-
+Python script:
+            literary_zh_to_en.py
+Python script notes:
+            1.) Implements a Synchronized Sliding Source-Target Window. 
+                        - Instead of caching the entire 1M token input at once, this will slice the input text into perfectly trackable translation blocks, passing a sliding window of the last translated block alongside the new source block to maintain stylistic consistency.
+                        - Thereby guarantees perfect 1:1 context tracking throughout the translation process.
+            2.) Traditional Chinese characters carry high informational density (averaging 1.5 to 2 tokens per character in Qwen's tokenizer).
+            3.) Mac Ultra 256GB hardware optimization, run this in terminal first to unlock memory restrictions:
+                          sudo sysctl iogpu.wired_mem_breakpoint_cap=250000
 
 import os
 import sys
