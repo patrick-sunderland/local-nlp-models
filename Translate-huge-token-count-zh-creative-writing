@@ -28,7 +28,7 @@ Python script notes:
             3.) Mac Ultra 256GB hardware optimization, run this in terminal first to unlock memory restrictions:
                           sudo sysctl iogpu.wired_mem_breakpoint_cap=250000
             4.) Verify Prompt Formatting: Ensure that source_document.txt does not contain text resembling model system tags (like <|im_start|>), as a 0.8 temperature can cause the model to act on those tags instead of translating them.
-            5.) Launch with Background Execution: Protect this long process against terminal disconnection or screen sleeps by initiating the pipeline via caffeinate:
+            5.) Launch with Background Execution: Protect this long process (1M tokens locally - expect circa. 8 hours!) against terminal disconnection or screen sleeps by initiating the pipeline via caffeinate:
                           caffeinate -i python3 literary_zh_to_en.py
 
 
