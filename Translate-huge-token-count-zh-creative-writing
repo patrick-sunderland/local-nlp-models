@@ -1,6 +1,6 @@
 Performing local (Mac M3 Ultra 256GB memory) translation of huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing with contextual understanding of the entire text.
 
-Example model: Qwen/Qwen3.5-397B-A17B
+Example model: Qwen/Qwen3.5-397B-A17B, footprint is 807GB --> 1.Prune experts/weights for task, target 400/420GB BFP16 --> 2.Quantize for mlx 8-bit, target 200/220GB MXFP8  --> pj-s/Qwen3.5-pjspruned-397B-A17B-mxfp8 
 Example parameters: 
             temperature=0.8,              # Dynamic phrasing and creative prose rhythm
             top_p=0.9,                    # Nucleus sampling boundary
