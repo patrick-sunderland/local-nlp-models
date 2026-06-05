@@ -7,14 +7,16 @@ Example parameters:
             min_p=0.05,                   # Dynamically drops noise tokens
             top_k=50,                     # Caps maximum token pool considerations
             repetition_penalty=1.01,      # Gentle protection against loops without killing style
+            max_kv_size=32768             # Forces MLX to forget the oldest generated tokens in its active RAM layer while keeping its core document understanding intact via the prompt_cache_file
 Example chunking parametes:
-            CHUNK_CHAR_SIZE = 12000       # ~12,000 characters is roughly 3,000 tokens
-            MAX_OUTPUT_TOKENS = 4096      # Token Expansion - Translating from Chinese to English naturally results in a higher token count for the output than the input (often a 1.3x multiplier)
+            CHUNK_CHAR_SIZE = 3500        # Literary Calibration: Slightly smaller source blocks give the model more computational headroom to explore creative prose phrasing.
+            MAX_OUTPUT_TOKENS = 6144      # Token Expansion - Translating from Chinese to English naturally results in a higher token count for the output than the input (often a 1.3x multiplier)
 
 Notes:
 1.) Implements a Synchronized Sliding Source-Target Window. 
 - Instead of caching the entire 1M token input at once, this will slice the input text into perfectly trackable translation blocks, passing a sliding window of the last translated block alongside the new source block to maintain stylistic consistency.
-- Thereby guarantees perfect 1:1 context tracking throughout the translation process,
+- Thereby guarantees perfect 1:1 context tracking throughout the translation process.
+2.) Traditional Chinese characters carry high informational density (averaging 1.5 to 2 tokens per character in Qwen's tokenizer).
 
 
 import os
