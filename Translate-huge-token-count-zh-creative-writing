@@ -7,10 +7,14 @@ Example parameters:
             min_p=0.05,                   # Dynamically drops noise tokens
             top_k=50,                     # Caps maximum token pool considerations
             repetition_penalty=1.01,      # Gentle protection against loops without killing style
+Example chunking parametes:
+            CHUNK_CHAR_SIZE = 12000       # ~12,000 characters is roughly 3,000 tokens
+            MAX_OUTPUT_TOKENS = 4096      # Token Expansion - Translating from Chinese to English naturally results in a higher token count for the output than the input (often a 1.3x multiplier)
 
 Notes:
-Implements a Synchronized Sliding Source-Target Window. Instead of caching the entire 1M token input at once, this will slice the input text into perfectly trackable translation blocks, passing a sliding window of the last translated block alongside the new source block to maintain stylistic consistency.
-Token Expansion: Translating from Chinese to English naturally results in a higher token count for the output than the input (often a 1.3x multiplier).
+1.) Implements a Synchronized Sliding Source-Target Window. 
+- Instead of caching the entire 1M token input at once, this will slice the input text into perfectly trackable translation blocks, passing a sliding window of the last translated block alongside the new source block to maintain stylistic consistency.
+- Thereby guarantees perfect 1:1 context tracking throughout the translation process,
 
 
 import os
