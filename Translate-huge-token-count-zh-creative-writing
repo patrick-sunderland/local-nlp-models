@@ -4,9 +4,9 @@ By design this is intended to be used in a single prompt/single response manner 
 Example model:
             Qwen/Qwen3.5-397B-A17B, BF16 footprint is 807GB
             Modifications:
-                        --> 1.Prune experts/weights for task, target 400/420GB footprint @BF16 
+                        --> 1.Prune experts/weights for task, target 400/420GB footprint @BF16
                         --> 2.Quantize for mlx 8-bit, target 200/220GB footprint @MXFP8
-                        --> Modified model: pj-s/Qwen3.5-pjspruned-397B-A17B-mxfp8 
+                        --> Modified model: pj-s/Qwen3.5-REAP-212B-A17B-mxfp8
 Example parameters: 
             temperature=0.8,              # Dynamic phrasing and creative prose rhythm
             top_p=0.9,                    # Nucleus sampling boundary
@@ -45,7 +45,7 @@ MODEL_PATH = "pj-s/Qwen3.5-REAP-212B-A17B-mxfp8"
 SOURCE_FILE = "source_document.txt"      
 TARGET_FILE = "translated_document.txt"  
 
-print("Loading Qwen3.5-REAP-212B-A17B-mxfp8 into Unified Memory...")
+print("Loading pj-s/Qwen3.5-REAP-212B-A17B-mxfp8 into Unified Memory...")
 model, tokenizer = load(MODEL_PATH)
 
 # Slicing configurations for high-end text generation
