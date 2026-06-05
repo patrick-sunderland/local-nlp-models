@@ -1,0 +1,118 @@
+Performing local translation of huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing with contextual understanding of the entire text.
+
+Example model: 
+
+import os
+import sys
+import mlx_lm
+from mlx_lm.utils import load, generate
+
+# Hardware Optimization: Run this in terminal first to unlock memory restrictions
+# sudo sysctl iogpu.wired_mem_breakpoint_cap=250000
+
+MODEL_PATH = "pj-s/Qwen3.5-REAP-212B-A17B-mxfp8"
+SOURCE_FILE = "source_document.txt"      
+TARGET_FILE = "translated_document.txt"  
+
+print("Loading Qwen3.5-REAP-212B-A17B-mxfp8 into Unified Memory...")
+model, tokenizer = load(MODEL_PATH)
+
+# Slicing configurations for high-end text generation
+CHUNK_CHAR_SIZE = 3500  
+MAX_OUTPUT_TOKENS = 6144  
+
+def read_zh_source_chunks(filepath, chunk_size):
+    """Yields chunks of Traditional Chinese text split at paragraph/sentence breaks."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        text = f.read()
+    
+    start = 0
+    while start < len(text):
+        if start + chunk_size >= len(text):
+            yield text[start:]
+            break
+        
+        end = text.rfind("\n\n", start, start + chunk_size)
+        if end == -1 or end <= start:
+            end = text.rfind("。", start, start + chunk_size)
+            if end == -1 or end <= start:
+                end = start + chunk_size
+            else:
+                end += 1
+        else:
+            end += 2
+            
+        yield text[start:end]
+        start = end
+
+chunks = list(read_zh_source_chunks(SOURCE_FILE, CHUNK_CHAR_SIZE))
+total_chunks = len(chunks)
+print(f"Document parsed into {total_chunks} blocks for production.")
+
+last_source_context = ""
+last_translated_context = ""
+stop_words = ["<|im_end|>", "<|im_start|>", "[Current Source Text", "\n\n\n"]
+
+with open(TARGET_FILE, "a", encoding="utf-8") as out_file:
+    for index, current_source_chunk in enumerate(chunks):
+        print(f"\n--- Processing Block {index + 1} / {total_chunks} ---")
+        
+        system_instruction = (
+            "You are a world-class literary translator transforming Traditional Chinese literature into elegant, natural English prose.\n"
+            "Do not perform a literal word-for-word translation. Instead, prioritize flow, cadence, voice, and emotional resonance.\n"
+            "Maintain structural and stylistic continuity with the 'Previous English Translation Context'.\n"
+            "CRITICAL: Output ONLY the direct English translation. Do not include introductory text, conversational chatter, or notes."
+        )
+        
+        user_prompt = f"""
+[Previous Chinese Source Context]
+{last_source_context}
+
+[Previous English Translation Context]
+{last_translated_context}
+
+[Current Source Text to Translate (Traditional Chinese)]
+{current_source_chunk}
+
+[English Translation]
+"""
+
+        full_prompt = f"<|im_start|>system\n{system_instruction}<|im_end|>\n<|im_start|>user\n{user_prompt}<|im_end|>\n<|im_start|>assistant\n"
+
+        # Safe Generation Pass with your full creative sampling profile
+        translated_chunk = generate(
+            model,
+            tokenizer,
+            prompt=full_prompt,
+            max_kv_size=32768,           
+            max_tokens=MAX_OUTPUT_TOKENS, 
+            
+            # --- Customised Generation Profile ---
+            temperature=0.8,              # Dynamic phrasing and creative prose rhythm
+            top_p=0.9,                    # Nucleus sampling boundary
+            min_p=0.05,                   # Dynamically drops noise tokens
+            top_k=50,                     # Caps maximum token pool considerations
+            repetition_penalty=1.01,      # Gentle protection against loops without killing style
+        )
+        
+        # Boundary tracking to prevent formatting leaks
+        if isinstance(translated_chunk, list):
+            translated_chunk = "".join(translated_chunk)
+            
+        for stop_word in stop_words:
+            if stop_word in translated_chunk:
+                translated_chunk = translated_chunk.split(stop_word)[0] # Keep only text prior to the leak
+        
+        translated_chunk = translated_chunk.strip()
+        
+        # Write block directly to target text file
+        out_file.write(translated_chunk + "\n\n")
+        out_file.flush()
+        
+        # Slide context windows forward
+        last_source_context = current_source_chunk[-1200:]  
+        last_translated_context = translated_chunk[-2500:]  
+        
+        print(f"Block {index + 1} finalized and saved to disk.")
+
+print(f"\n✅ Massive high-fidelity literary translation complete! Saved to: {TARGET_FILE}")
