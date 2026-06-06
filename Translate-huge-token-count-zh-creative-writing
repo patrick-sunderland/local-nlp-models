@@ -1,5 +1,5 @@
-Performs local (Mac Studio M3 Ultra 256GB memory) translation of a huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing text utilizing a contextual understanding of the entire text.
-By design this is intended to be used in a single prompt/single response manner - context should not be preserved beyond the response.
+Performs local (Mac Studio M3 Ultra 256GB memory) translation of a huge token count (1M+ prompt, 1M+ response) Traditional Chinese (zh) language creative writing text while maintaining a contextual understanding of the entire text.
+By design this is intended to be used in a single prompt/single response manner - context should not be preserved beyond the one response.
 
 Example model:
             Qwen/Qwen3.5-397B-A17B, BF16 footprint is 807GB
