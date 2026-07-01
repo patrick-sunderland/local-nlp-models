@@ -32,7 +32,7 @@ Execution Rules:
 7. Output ONLY the final, polished English text with no extra conversational filler, analysis, or conversational responses.
 
 Please provide only:
-1. The final, polished English Text.
+1. The final, professional and polished English film script strictly adhearing to standard Hollywood script formatting including: scene headings in ALL CAPS, Character Names centered, Dialogue underneath, and Parentheses around text that denotes actions, gestures, movements, etc. Logline / Premise: [Describe the core premise of the scene or film in 1-2 sentences, prefix with '[PREMISE:]'. E.g., Two estranged brothers reunite at a dusty gas station to divide their late father's estate.] Characters: [Briefly name and describe the characters involved, including their emotional state or objective. E.g., JOHN (40s, stoic, hiding a secret) and MARK (30s, nervous, desperate for answers). Prefix with '[CHARACTERS:]'.] Setting: [Describe time, location in detail, and atmosphere, etc. prefix with '[SETTING:]'. E.g., Interior, a dimly lit, abandoned diner, late at night, thunderstorm raging outside.] Conflict: [What is the tension in this scene?, prefix with '[CONFLICT:]' E.g., Mark confronts John about the missing inheritance, while John tries to shut down the conversation.] Tone: prefix with '[TONE:]' [E.g., Suspenseful, gritty, and fast-paced. etc.]
 
 
 C) USER PROMPT TEMPLATE Use when prompting the model, provide context to help it make better stylistic choices:
